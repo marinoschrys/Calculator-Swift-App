@@ -24,17 +24,19 @@ if let input1 = readLine(), let num1 = Int(input1) {
                     result = num1*num2
                 case "/":
                     if num2 == 0 {
-                        print("Error")
+                        result = nil
                     } else {
                         result = num1/num2
                     }
                 default:
-                    print("Error")
+                    result = nil
             }
             if result != nil {
-                print(result!)
+                print("Result: \(result!)")
+            }
+            else {
+                print("Error")
             }
         }
     }
-    
 }
