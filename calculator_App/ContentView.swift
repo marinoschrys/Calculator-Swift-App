@@ -81,9 +81,7 @@ struct ContentView: View {
                 break
             }
             result = calculateResult()!
-            if !isRepeating {
-                currentOperation = ""
-            }
+            currentOperation = ""
         case "+","-","*","/":
             operatorTapped = true
             isRepeating = false
@@ -139,7 +137,6 @@ struct ContentView: View {
         }
         
         display = String(result)
-        previewsNumber = String(result)
         isRepeating = true
         return result
     }
