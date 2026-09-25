@@ -1,9 +1,0 @@
-# Xcode
-.xcworkspace
-xcuserdata/
-DerivedData/
-.DS_Store
-.xcodeproj
-
-#Swift Package Manager
-.build/
