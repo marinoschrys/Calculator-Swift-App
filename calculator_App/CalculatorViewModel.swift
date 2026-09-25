@@ -6,7 +6,7 @@
 //
 
 import SwiftUI
-public import Combine
+import Combine
 
 
 class CalculatorViewModel : ObservableObject {
