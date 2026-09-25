@@ -8,13 +8,7 @@
 import SwiftUI
 
 struct ContentView: View {
-    @State private var display = "0"
-    @State private var previewsNumber = "0"
-    @State private var currentOperation = ""
-    @State private var operatorTapped = false
-    @State private var result: Int? = nil
-    @State private var lastOperand: Int? = nil
-    @State private var isRepeating = false
+    @StateObject private var vm = CalculatorViewModel()
     
     let buttons = [
         ["7", "8", "9", "/"],
@@ -25,16 +19,16 @@ struct ContentView: View {
 
     var body: some View {
         VStack (spacing: 15) {
-            Text(display)
+            Text(vm.display)
                 .font(.system(size: 50))
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
 
-            ForEach(buttons, id: \.self) { row in
+            ForEach(vm.buttons, id: \.self) { row in
                 HStack (spacing: 10){
                     ForEach(row, id: \.self) { buttonTitle in
                         Button(action: {
-                            buttonTapped(buttonTitle)
+                            vm.buttonTapped(buttonTitle)
                         }) {
                             Text(buttonTitle)
                                 .font(.title)
@@ -53,7 +47,6 @@ struct ContentView: View {
         .padding()
     }
     
-    
     func getBackgroundColor(_ title: String) -> Color{
         switch title {
         case "C":
@@ -66,81 +59,6 @@ struct ContentView: View {
             return Color.gray.opacity(0.2)
         }
     }
-    
-    
-    func buttonTapped(_ title: String) {
-        switch title {
-        case "C":
-            display = "0"
-            previewsNumber = "0"
-            currentOperation = ""
-            isRepeating = false
-            operatorTapped = false
-        case "=":
-            if !operatorTapped {
-                break
-            }
-            result = calculateResult()!
-            currentOperation = ""
-        case "+","-","*","/":
-            operatorTapped = true
-            isRepeating = false
-            if currentOperation != "" {
-                result = calculateResult()!
-                previewsNumber = String(result!)
-            }
-            else {
-                previewsNumber = display
-            }
-            currentOperation = title
-            display = "0"
-        default:
-            if display == "0" {
-                display = title
-            }
-            else {
-                display += title
-            }
-            isRepeating = false
-        }
-    }
-    
-    
-    func calculateResult() -> Int? {
-        
-        let num2: Int
-        if isRepeating, let last = lastOperand {
-            num2 = last
-        } else {
-            guard let n2 = Int(display) else { return nil}
-            num2 = n2
-            lastOperand = num2
-        }
-        
-        guard let num1 = Int(previewsNumber) else { return nil}
-        
-        var result = 0
-        
-        switch currentOperation {
-        case "+": result = num1 + num2
-        case "-": result = num1 - num2
-        case "*": result = num1 * num2
-        case "/":
-            if num2 != 0 {
-                result = num1/num2
-            }
-            else {
-                display = "Error"
-                return nil
-            }
-        default: break
-        }
-        
-        display = String(result)
-        isRepeating = true
-        return result
-    }
-    
 }
 
 #Preview {
