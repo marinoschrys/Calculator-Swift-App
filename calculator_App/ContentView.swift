@@ -29,7 +29,7 @@ struct ContentView: View {
                 .padding()
 
             ForEach(buttons, id: \.self) { row in
-                HStack (spacing: 12){
+                HStack (spacing: 10){
                     ForEach(row, id: \.self) { buttonTitle in
                         Button(action: {
                             buttonTapped(buttonTitle)
@@ -37,12 +37,13 @@ struct ContentView: View {
                             Text(buttonTitle)
                                 .font(.title)
                                 .frame(width: 70, height: 70)
-                                .background(getBackgroundColor(buttonTitle))
+                                .background(.black.opacity(0.2))
                                 .clipShape(.circle)
                                 .foregroundColor(.white)
+
                         }
-                        .frame(width: 70, height: 70)
                         .buttonStyle(.plain)
+                        .glassEffect(.regular.tint(getBackgroundColor(buttonTitle)).interactive(), in: .circle)
                     }
                 }
             }
@@ -72,6 +73,7 @@ struct ContentView: View {
             isRepeating = false
         case "=": calculateResult()
         case "+","-","*","/":
+            isRepeating = false
             previewsNumber = display
             currentOperation = title
             display = "0"
