@@ -9,8 +9,10 @@ import SwiftUI
 
 struct ContentView: View {
     @State private var display = "0"
-    @State private var previewsNumber = ""
+    @State private var previewsNumber = "0"
     @State private var currentOperation = ""
+    @State private var operatorTapped = false
+    @State private var result: Int? = nil
     @State private var lastOperand: Int? = nil
     @State private var isRepeating = false
     
@@ -51,6 +53,7 @@ struct ContentView: View {
         .padding()
     }
     
+    
     func getBackgroundColor(_ title: String) -> Color{
         switch title {
         case "C":
@@ -64,17 +67,33 @@ struct ContentView: View {
         }
     }
     
+    
     func buttonTapped(_ title: String) {
         switch title {
         case "C":
             display = "0"
-            previewsNumber = ""
+            previewsNumber = "0"
             currentOperation = ""
             isRepeating = false
-        case "=": calculateResult()
+            operatorTapped = false
+        case "=":
+            if !operatorTapped {
+                break
+            }
+            result = calculateResult()!
+            if !isRepeating {
+                currentOperation = ""
+            }
         case "+","-","*","/":
+            operatorTapped = true
             isRepeating = false
-            previewsNumber = display
+            if currentOperation != "" {
+                result = calculateResult()!
+                previewsNumber = String(result!)
+            }
+            else {
+                previewsNumber = display
+            }
             currentOperation = title
             display = "0"
         default:
@@ -84,21 +103,23 @@ struct ContentView: View {
             else {
                 display += title
             }
+            isRepeating = false
         }
     }
     
-    func calculateResult() {
+    
+    func calculateResult() -> Int? {
         
         let num2: Int
         if isRepeating, let last = lastOperand {
             num2 = last
         } else {
-            guard let n2 = Int(display) else { return }
+            guard let n2 = Int(display) else { return nil}
             num2 = n2
             lastOperand = num2
         }
         
-        guard let num1 = Int(previewsNumber) else { return }
+        guard let num1 = Int(previewsNumber) else { return nil}
         
         var result = 0
         
@@ -112,7 +133,7 @@ struct ContentView: View {
             }
             else {
                 display = "Error"
-                return
+                return nil
             }
         default: break
         }
@@ -120,6 +141,7 @@ struct ContentView: View {
         display = String(result)
         previewsNumber = String(result)
         isRepeating = true
+        return result
     }
     
 }
