@@ -12,10 +12,10 @@ import Combine
 class CalculatorViewModel : ObservableObject {
     @Published var display = "0"
     
-    private var previewsNumber = "0"
+    private var previewsNumber = "0"  //holds the previews number or the first number of the equation
     private var currentOperation = ""
     private var operatorTapped = false
-    private var result: Int? = nil
+    private var result: Int = 0
     private var lastOperand: Int? = nil
     private var isRepeating = false
     
@@ -36,20 +36,21 @@ class CalculatorViewModel : ObservableObject {
             operatorTapped = false
         case "=":
             if !operatorTapped {
-                break
+                previewsNumber = display
             }
-            result = calculateResult()!
-            currentOperation = ""
+            result = calculateResult()
+            //currentOperation = ""
+            operatorTapped = false
         case "+","-","*","/":
-            operatorTapped = true
             isRepeating = false
-            if currentOperation != "" {
-                result = calculateResult()!
-                previewsNumber = String(result!)
+            if operatorTapped {
+                result = calculateResult()
+                previewsNumber = String(result)
             }
             else {
                 previewsNumber = display
             }
+            operatorTapped = true
             currentOperation = title
             display = "0"
         default:
@@ -63,18 +64,18 @@ class CalculatorViewModel : ObservableObject {
         }
     }
     
-    private func calculateResult() -> Int? {
+    private func calculateResult() -> Int {
         
         let num2: Int
         if isRepeating, let last = lastOperand {
             num2 = last
         } else {
-            guard let n2 = Int(display) else { return nil}
+            guard let n2 = Int(display) else { return 0 }
             num2 = n2
             lastOperand = num2
         }
         
-        guard let num1 = Int(previewsNumber) else { return nil}
+        guard let num1 = Int(previewsNumber) else { return 0 }
         
         var result = 0
         
@@ -88,7 +89,7 @@ class CalculatorViewModel : ObservableObject {
             }
             else {
                 display = "Error"
-                return nil
+                return 0
             }
         default: break
         }

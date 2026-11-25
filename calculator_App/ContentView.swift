@@ -24,7 +24,7 @@ struct ContentView: View {
                 .frame(maxWidth: .infinity, alignment: .trailing)
                 .padding()
 
-            ForEach(vm.buttons, id: \.self) { row in
+            ForEach(buttons, id: \.self) { row in
                 HStack (spacing: 10){
                     ForEach(row, id: \.self) { buttonTitle in
                         Button(action: {
@@ -46,7 +46,7 @@ struct ContentView: View {
         }
         .padding()
     }
-    
+
     func getBackgroundColor(_ title: String) -> Color{
         switch title {
         case "C":
@@ -56,7 +56,7 @@ struct ContentView: View {
         case "+", "-", "/", "*":
             return .orange
         default:
-            return Color.gray.opacity(0.2)
+            return Color.gray.opacity(0.1)
         }
     }
 }
